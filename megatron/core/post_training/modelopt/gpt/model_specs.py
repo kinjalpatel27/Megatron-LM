@@ -39,6 +39,7 @@ def get_gpt_modelopt_spec(
     real_quant_cfg: str = "None",
     qk_l2_norm: bool = False,
     use_arbitrary_attention_mask: bool = False,
+    moe_grouped_gemm: bool = False,
 ):
     """Mix the native spec with TENorm.
 
@@ -140,11 +141,11 @@ def get_gpt_modelopt_spec(
             layer_specs=[dense_layer_spec] * num_layers_to_build, layer_norm=Norm
         )
 
+    # moe_grouped_gemm is only supported for TEGroupedMLP for ModelOpt Quantization
     moe_mlp_spec = get_mlp_module_spec(
-        use_te=False,
+        use_te=moe_grouped_gemm,
         num_experts=config.num_moe_experts,
-        moe_grouped_gemm=False,
-        # use_te=True, num_experts=config.num_moe_experts, moe_grouped_gemm=True,
+        moe_grouped_gemm=moe_grouped_gemm,
     )
 
     moe_layer_spec = ModuleSpec(

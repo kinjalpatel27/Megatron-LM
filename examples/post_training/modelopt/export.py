@@ -35,6 +35,11 @@ def add_modelopt_export_args(parser):
         type=str,
         help="A pretrained model hosted inside a model repo on huggingface.co.",
     )
+    group.add_argument(
+        "--export-bf16-weights-amax",
+        type=float,
+        help="The amax value for bf16 weights.",
+    )
     group.add_argument("--export-dir", type=str, help="The target export path.")
     add_modelopt_args(parser)
     return parser
@@ -88,4 +93,5 @@ if __name__ == "__main__":
         export_extra_modules=export_extra_modules,
         dtype=torch.bfloat16,
         export_dir=args.export_dir,
+        export_bf16_weights_amax=args.export_bf16_weights_amax,
     )
